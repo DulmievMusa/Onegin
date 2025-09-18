@@ -14,6 +14,8 @@ int CreateArrayOfPointers(char* text, char ** pointers_array);
 void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings);
 int BubleSort(char** pointers_array, int number_of_strings);
 char* ReturnLink_ToFirstLetter(char* string);
+int CompareStr(const void* first_string,
+                const void* second_string);
 
 int main()
 {
@@ -38,7 +40,8 @@ int main()
     printf("Number of strings: %d\n", GetNumberOfStrings(text));
     printf("Number of symbols: %ld\n", lSize);
     pointers_array[3] = pointers_array[0];
-    BubleSort(pointers_array, number_of_strings);
+    //BubleSort(pointers_array, number_of_strings);
+    qsort(pointers_array, number_of_strings, sizeof(char*), &CompareStr);
     PutToFile_PointersArray(pointers_array, number_of_strings);
 }
 
@@ -144,3 +147,15 @@ void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings) {
 }
     fclose(file);
 }
+
+
+int CompareStr(const void* first_string,
+                const void* second_string) 
+    {
+        char* s1 = * (char**) first_string;
+        char* s2 = * (char**) second_string;
+
+
+        return Strcmp(s1, s2);
+
+    }
