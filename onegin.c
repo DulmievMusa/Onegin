@@ -13,26 +13,25 @@ int CreateArrayOfPointers(char* text, char ** pointers_array);
 
 int main()
 {
-  FILE* ptrFile = fopen("small.txt" , "rb" );
- 
-  fseek(ptrFile , 0 , SEEK_END);                          // устанавливаем позицию в конец файла
-  long lSize = ftell(ptrFile);                            // получаем размер в байтах
-  rewind (ptrFile);                                       // устанавливаем указатель в конец файла
-  
- 
-  char* text = (char*) malloc(sizeof(char) * (lSize + 1)); // выделить память для хранения содержимого файла
-  char** pointers_array = (char**) calloc(GetNumberOfStrings(text), sizeof(char*));
-  text[lSize] = '\0';
-  fread(text, 1, lSize, ptrFile);       // считываем файл в буфер
-  CreateArrayOfPointers(text, pointers_array);
- 
-  //содержимое файла теперь находится в буфере
-  puts(text);
- 
-  fclose (ptrFile);
-  printf("%d\n", GetNumberOfStrings(text));
-  // printf("%p", pointers_array);
-  return 0;
+    FILE* ptrFile = fopen("small.txt" , "rb" );
+
+    fseek(ptrFile , 0 , SEEK_END);                     
+    long lSize = ftell(ptrFile);                           
+    rewind (ptrFile);                                       
+
+
+    char* text = (char*) malloc(sizeof(char) * (lSize + 1));
+    fread(text, 1, lSize, ptrFile);
+    fclose (ptrFile);
+    char** pointers_array = (char**) calloc(GetNumberOfStrings(text), sizeof(char*));
+
+
+    text[lSize] = '\0';
+    CreateArrayOfPointers(text, pointers_array);
+
+    printf("%s\n", text);
+    printf("Number of strings: %d\n", GetNumberOfStrings(text));
+    printf("Number of symbols: %ld\n", lSize);
 }
 
 
@@ -61,10 +60,10 @@ int CreateArrayOfPointers(char* text, char ** pointers_array) {
     int index_text = 0;
     int index_array = 1;
     while (text[index_text] != '\0') {
-        printf("%d\n", index_text);
         if (text[index_text] == '\n') {
             pointers_array[index_array] = text + (index_text + 1);
             index_array++;
+            text[index_text] = '\n';
         }
         index_text++;
     }
