@@ -26,6 +26,7 @@ int main()
     fread(text, 1, lSize, ptrFile);
     fclose (ptrFile);
     int number_of_strings = GetNumberOfStrings(text);
+
     char** pointers_array = (char**) calloc(number_of_strings, sizeof(char*));
 
 
@@ -35,7 +36,8 @@ int main()
     printf("%s\n", text);
     printf("Number of strings: %d\n", GetNumberOfStrings(text));
     printf("Number of symbols: %ld\n", lSize);
-    pointers_array[2] = pointers_array[0];
+    pointers_array[3] = pointers_array[0];
+    BubleSort(pointers_array, number_of_strings);
     PutToFile(pointers_array, number_of_strings);
 }
 
@@ -52,30 +54,30 @@ int Strcmp(char* first_string, char* second_string) {
     return first_string[index] - second_string[index];
 }
 
-/*int BubleSort(char** pointers_array, int number_of_strings) {
+int BubleSort(char** pointers_array, int number_of_strings) {
     int was_replaced = true;
-    int count = 0;
+    int number_of_cycles_passed = 0;
     int index = 0;
+    int different = 0;
+    char* buffer = 0;
     while (was_replaced == true) {
-        while (index <= number_of_strings - 1) {
-
+        was_replaced = false;
+        index = 0;
+        while (index <= number_of_strings - 2 - number_of_cycles_passed) {
+            different = Strcmp(pointers_array[index], pointers_array[index + 1]);
+            buffer = pointers_array[index];
+            if (different > 0) {
+                pointers_array[index] = pointers_array[index + 1];
+                pointers_array[index + 1] = buffer;
+                was_replaced = true;
+            }
+            index++;
         }
+        
+        number_of_cycles_passed++;
     }
     return 0;
-} */
-
-
-/* int GetNumberOfStrings(char* array) {
-    int index = 0;
-    int count = 0;
-    while (array[index] != '\0') {
-        index++;
-        if (array[index] == '\n') {
-            count++;
-        }
-    }
-    return (count + 1);
-} */
+}
 
 int CreateArrayOfPointers(char* text, char ** pointers_array) {
     *pointers_array = text;
@@ -107,7 +109,6 @@ int GetNumberOfStrings(const char* array) {
     }
 }
 
-
 void PutToFile(char** pointers_array, int numbers_of_strings) {
     FILE *file;
     file = fopen("result.txt", "w");
@@ -116,7 +117,7 @@ void PutToFile(char** pointers_array, int numbers_of_strings) {
     char symbol = *(pointers_array[0]);
     while (index_in_pointers <= (numbers_of_strings - 1)) {
         index_in_string = 0;
-        symbol = *(pointers_array[index_in_string]);
+        symbol = *(pointers_array[index_in_pointers]);
         while (symbol != '\n' && symbol != '\0') {
             fputc(symbol, file);
             index_in_string++;
