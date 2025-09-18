@@ -8,18 +8,24 @@
 #include <malloc.h>
 #include <ctype.h>
 
+#define DIRECTION "result.txt"
+#define SOURCE "onegin.txt"
+
 
 int GetNumberOfStrings(const char* array);
 int CreateArrayOfPointers(char* text, char ** pointers_array);
 void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings);
 int BubleSort(char** pointers_array, int number_of_strings);
 char* ReturnLink_ToFirstLetter(char* string);
-int CompareStr(const void* first_string,
+int CompareStrReverse(const void* first_string,
                 const void* second_string);
+void ClearResultFile(const char* direction);
+int Strcmp(char* first_string, char* second_string);
 
 int main()
 {
-    FILE* ptrFile = fopen("onegin.txt" , "rb" );
+    ClearResultFile(DIRECTION);
+    FILE* ptrFile = fopen(SOURCE, "rb" );
 
     fseek(ptrFile , 0 , SEEK_END);                     
     long lSize = ftell(ptrFile);                           
@@ -41,8 +47,16 @@ int main()
     printf("Number of symbols: %ld\n", lSize);
     pointers_array[3] = pointers_array[0];
     //BubleSort(pointers_array, number_of_strings);
-    qsort(pointers_array, number_of_strings, sizeof(char*), &CompareStr);
+    qsort(pointers_array, number_of_strings, sizeof(char*), &CompareStrReverse);
     PutToFile_PointersArray(pointers_array, number_of_strings);
+    PutToFile_PointersArray(pointers_array, number_of_strings);
+    fclose(ptrFile);
+}
+
+void ClearResultFile(const char* direction) {
+    FILE *file;
+    file = fopen(direction, "w");
+    fclose(file);
 }
 
 char* ReturnLink_ToFirstLetter(char* string) {
@@ -131,7 +145,7 @@ int GetNumberOfStrings(const char* array) {
 
 void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings) {
     FILE *file;
-    file = fopen("result.txt", "w");
+    file = fopen("result.txt", "a");
     int index_in_string = 0;
     int index_in_pointers = 0;
     char symbol = *(pointers_array[0]);
@@ -149,13 +163,23 @@ void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings) {
 }
 
 
-int CompareStr(const void* first_string,
-                const void* second_string) 
+int CompareStrReverse(const void* par1,
+                const void* par2) 
     {
-        char* s1 = * (char**) first_string;
-        char* s2 = * (char**) second_string;
+        char* first_string = * (char**) par1;
+        char* second_string = * (char**) par2;
 
 
-        return Strcmp(s1, s2);
+        int index = 0, different = 0;
+        /* first_string = ReturnLink_ToFirstLetter(first_string);
+        second_string = ReturnLink_ToFirstLetter(second_string); */
+        while (first_string[index] != '\n' && second_string[index] != '\n') {
+            different = toupper(first_string[index]) - toupper(second_string[index]);
+            if (different != 0) {
+                return different;
+            }
+            index++;
+        }
+        return toupper(first_string[index]) - toupper(second_string[index]);
 
     }
