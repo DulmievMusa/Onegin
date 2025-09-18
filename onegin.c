@@ -11,6 +11,7 @@
 int GetNumberOfStrings(const char* array);
 int CreateArrayOfPointers(char* text, char ** pointers_array);
 void PutToFile(char** pointers_array, int numbers_of_strings);
+int BubleSort(char** pointers_array, int number_of_strings);
 
 int main()
 {
@@ -39,12 +40,27 @@ int main()
 }
 
 
+int Strcmp(char* first_string, char* second_string) {
+    int index = 0, different = 0;
+    while (first_string[index] != '\n' && second_string[index] != '\n') {
+        different = first_string[index] - second_string[index];
+        if (different != 0) {
+            return different;
+        }
+        index++;
+    }
+    return first_string[index] - second_string[index];
+}
 
+/*int BubleSort(char** pointers_array, int number_of_strings) {
+    int was_replaced = true;
+    int count = 0;
+    int index = 0;
+    while (was_replaced == true) {
+        while (index <= number_of_strings - 1) {
 
-/* int BubleSort(char* array) {
-    array + 1;
-    printf("14\n");
-    printf("Number of strings: %d\n", GetNumberOfStrings("12\n45\n78\n98\n8988988"));
+        }
+    }
     return 0;
 } */
 
@@ -79,15 +95,15 @@ int CreateArrayOfPointers(char* text, char ** pointers_array) {
 
 
 int GetNumberOfStrings(const char* array) {
-    int count = 1;
+    int number_of_strings = 1;
     const char* link = array;
     while (true) {
         link = strchr(link, '\n');
         if (link == NULL) {  
-            return count;
+            return number_of_strings;
         }
         link = link + 1;
-        count++;
+        number_of_strings++;
     }
 }
 
