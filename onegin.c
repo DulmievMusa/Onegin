@@ -6,16 +6,18 @@
 #include <string.h>
 #include <stdarg.h>
 #include <malloc.h>
+#include <ctype.h>
 
 
 int GetNumberOfStrings(const char* array);
 int CreateArrayOfPointers(char* text, char ** pointers_array);
-void PutToFile(char** pointers_array, int numbers_of_strings);
+void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings);
 int BubleSort(char** pointers_array, int number_of_strings);
+char* ReturnLink_ToFirstLetter(char* string);
 
 int main()
 {
-    FILE* ptrFile = fopen("small.txt" , "rb" );
+    FILE* ptrFile = fopen("onegin.txt" , "rb" );
 
     fseek(ptrFile , 0 , SEEK_END);                     
     long lSize = ftell(ptrFile);                           
@@ -33,29 +35,44 @@ int main()
     text[lSize] = '\0';
     CreateArrayOfPointers(text, pointers_array);
 
-    printf("%s\n", text);
     printf("Number of strings: %d\n", GetNumberOfStrings(text));
     printf("Number of symbols: %ld\n", lSize);
     pointers_array[3] = pointers_array[0];
     BubleSort(pointers_array, number_of_strings);
-    PutToFile(pointers_array, number_of_strings);
+    PutToFile_PointersArray(pointers_array, number_of_strings);
+}
+
+char* ReturnLink_ToFirstLetter(char* string) {
+    int index = 0;
+    char symbol = string[index];
+    while (!isalpha(symbol) && symbol != '\n' && symbol != '\0') {
+        index++;
+        symbol = string[index];
+    }
+    if (isalpha(symbol)) {
+        return string + index;
+    }
+    return string;
+
 }
 
 
 int Strcmp(char* first_string, char* second_string) {
     int index = 0, different = 0;
+    first_string = ReturnLink_ToFirstLetter(first_string);
+    second_string = ReturnLink_ToFirstLetter(second_string);
     while (first_string[index] != '\n' && second_string[index] != '\n') {
-        different = first_string[index] - second_string[index];
+        different = toupper(first_string[index]) - toupper(second_string[index]);
         if (different != 0) {
             return different;
         }
         index++;
     }
-    return first_string[index] - second_string[index];
+    return toupper(first_string[index]) - toupper(second_string[index]);
 }
 
 int BubleSort(char** pointers_array, int number_of_strings) {
-    int was_replaced = true;
+    bool was_replaced = true;
     int number_of_cycles_passed = 0;
     int index = 0;
     int different = 0;
@@ -109,7 +126,7 @@ int GetNumberOfStrings(const char* array) {
     }
 }
 
-void PutToFile(char** pointers_array, int numbers_of_strings) {
+void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings) {
     FILE *file;
     file = fopen("result.txt", "w");
     int index_in_string = 0;
