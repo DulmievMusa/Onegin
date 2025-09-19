@@ -6,7 +6,7 @@
 #include "get_functions.h"
 #include "sort_functions.h"
 
-int Strcmp(char* first_string, char* second_string) {
+int Strcmp(char* first_string, char* second_string) { //const 
     assert(first_string != NULL);
     assert(second_string != NULL);
 
@@ -47,7 +47,7 @@ int CompareStrFromEnd(const void* first_element,
 
     }
 
-int BubleSort(char** pointers_array, int number_of_strings) {
+int BubleSort(char** pointers_array, int number_of_strings) { ///comparator const
     assert(pointers_array != NULL);
 
     bool was_replaced = true;

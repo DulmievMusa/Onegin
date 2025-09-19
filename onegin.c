@@ -6,6 +6,7 @@
 #include <malloc.h>
 #include <ctype.h>
 #include <sys/stat.h>
+#include <stdarg.h>
 
 #include "sort_functions.h"
 #include "get_functions.h"
@@ -16,20 +17,25 @@ const char* DIRECTION = "result.txt";
 
 
 int CreateArrayOfPointers(char* text, char ** pointers_array);
-void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings, bool skip_spaces);
+void PutStringArrayToFile(char** pointers_array, int numbers_of_strings, bool skip_spaces, FILE* file);
 void ClearResultFile(const char* direction);
 void AllPut_ToFile(char** pointers_array, int number_of_strings, bool skip_spaces);
 
 
-int main()
-{
+int main(int number_of_arguments, char* values_of_arguments[]) {
+    bool to_skip_spaces = false;
+    if (number_of_arguments == 2) {
+        if (!strcmp(values_of_arguments[1], "skip")) {
+            to_skip_spaces = true;
+        }
+    }
     ClearResultFile(DIRECTION);
     long file_size = GetFileSize(SOURCE);
     char* text = GetText(SOURCE, file_size);
     int number_of_strings = GetNumberOfStrings(text);
     char** pointers_array = (char**) calloc(number_of_strings, sizeof(char*));
     CreateArrayOfPointers(text, pointers_array);
-    AllPut_ToFile(pointers_array, number_of_strings, true);
+    AllPut_ToFile(pointers_array, number_of_strings, to_skip_spaces);
     return 0;
 }
 
@@ -37,14 +43,19 @@ int main()
 void AllPut_ToFile(char** pointers_array, int number_of_strings, bool skip_spaces) {
     assert(pointers_array != NULL);
 
+    FILE *file;
+    file = fopen(DIRECTION, "a");
+
     BubleSort(pointers_array, number_of_strings);
-    PutToFile_PointersArray(pointers_array, number_of_strings, skip_spaces);
+    PutStringArrayToFile(pointers_array, number_of_strings, skip_spaces, file);
 
     qsort(pointers_array, number_of_strings, sizeof(char*), &CompareStrFromEnd);
-    PutToFile_PointersArray(pointers_array, number_of_strings, skip_spaces);
+    PutStringArrayToFile(pointers_array, number_of_strings, skip_spaces, file);
 
     BubleSort_PointersArray(pointers_array, number_of_strings);
-    PutToFile_PointersArray(pointers_array, number_of_strings, false);
+    PutStringArrayToFile(pointers_array, number_of_strings, false, file);
+
+    fclose(file);
 }
 
 void ClearResultFile(const char* direction) {
@@ -56,7 +67,7 @@ void ClearResultFile(const char* direction) {
 }
 
 
-int CreateArrayOfPointers(char* text, char ** pointers_array) {
+int CreateArrayOfPointers(char* text, char ** pointers_array) { // rename
     assert(text != NULL);
     assert(pointers_array != NULL);
 
@@ -67,26 +78,22 @@ int CreateArrayOfPointers(char* text, char ** pointers_array) {
         if (text[index_text] == '\n') {
             pointers_array[index_array] = text + (index_text + 1);
             index_array++;
-            text[index_text] = '\n';
         }
         index_text++;
     }
     return 0;
 }
 
-
-void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings, bool skip_spaces) {
+// PutStringArrayToFile
+void PutStringArrayToFile(char** pointers_array, int numbers_of_strings, bool skip_spaces, FILE* file) {
     assert(pointers_array != NULL);
-
-    FILE *file;
-    file = fopen(DIRECTION, "a");
     int index_in_string = 0;
     int index_in_pointers = 0;
     char symbol = *(pointers_array[0]);
     while (index_in_pointers <= (numbers_of_strings - 1)) {
         index_in_string = 0;
         symbol = *(pointers_array[index_in_pointers]);
-        if ((int) symbol == 13 && skip_spaces) {
+        if (symbol == '\r' && skip_spaces) {
             index_in_pointers++;
             continue;
             }
@@ -101,5 +108,5 @@ void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings, bool
         fputc('\n', file);
     }
     fputc('\n', file);
-    fclose(file);
+    
 }

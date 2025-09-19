@@ -6,7 +6,6 @@
 #include <malloc.h>
 #include <assert.h>
 
-
 #include "get_functions.h"
 
 char* ReturnLink_ToFirstLetter(char* string) {
@@ -78,9 +77,12 @@ long GetFileSize(const char* source) {
 char* GetText(const char* source, int file_size) {\
     assert(source != NULL);
 
-    FILE* source_file = fopen(source, "rb" );
-    char* text = (char*) malloc(sizeof(char) * (file_size + 1));
-    fread(text, 1, file_size, source_file);
+    FILE* source_file = fopen(source, "rb" ); // file == NULL
+    char* text = (char*) malloc(sizeof(char) * (file_size + 1)); // text == NULL?
+    //errno
+    //perror strerror
+    fread(text, 1, file_size, source_file); 
+    //ferror/feof
     fclose (source_file);
     text[file_size] = '\0';
     return text;
