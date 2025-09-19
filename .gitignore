@@ -3,3 +3,8 @@ st_funcs.c
 test.c
 massives.c
 trash
+
+get_functions.o
+onegin.o
+onegin.exe
+sort_functions.o
