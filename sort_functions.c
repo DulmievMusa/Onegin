@@ -1,13 +1,15 @@
 #include <stdbool.h>
 #include <ctype.h>
-
 #include <stdio.h>
-
+#include <assert.h>
 
 #include "get_functions.h"
 #include "sort_functions.h"
 
 int Strcmp(char* first_string, char* second_string) {
+    assert(first_string != NULL);
+    assert(second_string != NULL);
+
     int index = 0, different = 0;
     first_string = ReturnLink_ToFirstLetter(first_string);
     second_string = ReturnLink_ToFirstLetter(second_string);
@@ -22,8 +24,11 @@ int Strcmp(char* first_string, char* second_string) {
 }
 
 int CompareStrFromEnd(const void* first_element,
-                const void* second_element) 
-    {
+                const void* second_element) {
+        assert(first_element != NULL);
+        assert(second_element != NULL);
+        
+         
         char* first_element_of_first_string = * (char**) first_element;
         char* first_element_of_second_string = * (char**) second_element;
 
@@ -43,6 +48,8 @@ int CompareStrFromEnd(const void* first_element,
     }
 
 int BubleSort(char** pointers_array, int number_of_strings) {
+    assert(pointers_array != NULL);
+
     bool was_replaced = true;
     int number_of_cycles_passed = 0;
     int index = 0;
@@ -68,6 +75,8 @@ int BubleSort(char** pointers_array, int number_of_strings) {
 }
 
 int BubleSort_PointersArray(char** pointers_array, int number_of_strings) {
+    assert(pointers_array != NULL);
+
     bool was_replaced = true;
     int number_of_cycles_passed = 0;
     int index_of_pointer = 0;

@@ -1,10 +1,8 @@
 #include <stdio.h>
-#include <math.h>
 #include <stdbool.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h>
 #include <malloc.h>
 #include <ctype.h>
 #include <sys/stat.h>
@@ -37,6 +35,8 @@ int main()
 
 
 void AllPut_ToFile(char** pointers_array, int number_of_strings, bool skip_spaces) {
+    assert(pointers_array != NULL);
+
     BubleSort(pointers_array, number_of_strings);
     PutToFile_PointersArray(pointers_array, number_of_strings, skip_spaces);
 
@@ -48,6 +48,8 @@ void AllPut_ToFile(char** pointers_array, int number_of_strings, bool skip_space
 }
 
 void ClearResultFile(const char* direction) {
+    assert(direction != NULL);
+
     FILE *file;
     file = fopen(direction, "w");
     fclose(file);
@@ -55,6 +57,9 @@ void ClearResultFile(const char* direction) {
 
 
 int CreateArrayOfPointers(char* text, char ** pointers_array) {
+    assert(text != NULL);
+    assert(pointers_array != NULL);
+
     *pointers_array = text;
     int index_text = 0;
     int index_array = 1;
@@ -71,6 +76,8 @@ int CreateArrayOfPointers(char* text, char ** pointers_array) {
 
 
 void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings, bool skip_spaces) {
+    assert(pointers_array != NULL);
+
     FILE *file;
     file = fopen(DIRECTION, "a");
     int index_in_string = 0;

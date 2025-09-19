@@ -4,11 +4,14 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <malloc.h>
+#include <assert.h>
 
 
 #include "get_functions.h"
 
 char* ReturnLink_ToFirstLetter(char* string) {
+    assert(string != NULL);
+
     int index = 0;
     char symbol = string[index];
     while (!isalpha(symbol) && symbol != '\n' && symbol != '\0') {
@@ -23,6 +26,8 @@ char* ReturnLink_ToFirstLetter(char* string) {
 }
 
 char* ReturnLink_ToLastLetter(char* string) {
+    assert(string != NULL);
+
     int index = 0;
     int length = GetStringLength(string);
     char symbol = string[length - 1 - index];
@@ -37,6 +42,8 @@ char* ReturnLink_ToLastLetter(char* string) {
 }
 
 int GetStringLength(char* string) {
+    assert(string != NULL);
+
     int index = 0;
     while (string[index] != '\0' && string[index] != '\n') {
         index++;
@@ -45,6 +52,8 @@ int GetStringLength(char* string) {
 }
 
 int GetNumberOfStrings(const char* array) {
+    assert(array != NULL);
+
     int number_of_strings = 1;
     const char* link = array;
     while (true) {
@@ -58,13 +67,17 @@ int GetNumberOfStrings(const char* array) {
 }
 
 long GetFileSize(const char* source) {
+    assert(source != NULL);
+
     const char *filename = source;
     struct stat file_info;
     stat(filename, &file_info);
     return file_info.st_size;
 }
 
-char* GetText(const char* source, int file_size) {
+char* GetText(const char* source, int file_size) {\
+    assert(source != NULL);
+
     FILE* source_file = fopen(source, "rb" );
     char* text = (char*) malloc(sizeof(char) * (file_size + 1));
     fread(text, 1, file_size, source_file);
