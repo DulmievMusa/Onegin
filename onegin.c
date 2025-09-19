@@ -23,6 +23,7 @@ void ClearResultFile(const char* direction);
 int Strcmp(char* first_string, char* second_string);
 char* ReturnLink_ToLastLetter(char* string);
 int GetStringLength(char* string);
+int BubleSort_PointersArray(char** pointers_array, int number_of_strings);
 
 int main()
 {
@@ -37,6 +38,8 @@ int main()
     char* text = (char*) malloc(sizeof(char) * (lSize + 1));
     fread(text, 1, lSize, ptrFile);
     fclose (ptrFile);
+    
+
     int number_of_strings = GetNumberOfStrings(text);
 
     char** pointers_array = (char**) calloc(number_of_strings, sizeof(char*));
@@ -45,17 +48,14 @@ int main()
     text[lSize] = '\0';
     CreateArrayOfPointers(text, pointers_array);
 
-    printf("Number of strings: %d\n", GetNumberOfStrings(text));
-    printf("Number of symbols: %ld\n", lSize);
-
     BubleSort(pointers_array, number_of_strings);
     PutToFile_PointersArray(pointers_array, number_of_strings);
 
     qsort(pointers_array, number_of_strings, sizeof(char*), &CompareStrFromEnd);
     PutToFile_PointersArray(pointers_array, number_of_strings);
 
-
-    fclose(ptrFile);
+    BubleSort_PointersArray(pointers_array, number_of_strings);
+    PutToFile_PointersArray(pointers_array, number_of_strings);
 }
 
 void ClearResultFile(const char* direction) {
@@ -211,3 +211,29 @@ int CompareStrFromEnd(const void* first_element,
         return toupper(*(first_string - index)) - toupper(*(second_string - index));
 
     }
+
+
+int BubleSort_PointersArray(char** pointers_array, int number_of_strings) {
+    bool was_replaced = true;
+    int number_of_cycles_passed = 0;
+    int index = 0;
+    int different = 0;
+    char* buffer = 0;
+    while (was_replaced == true) {
+        was_replaced = false;
+        index = 0;
+        while (index <= number_of_strings - 2 - number_of_cycles_passed) {
+            different = ((size_t) ((pointers_array[index]))) - ((size_t) ((pointers_array[index + 1])));
+            buffer = pointers_array[index];
+            if (different > 0) {
+                pointers_array[index] = pointers_array[index + 1];
+                pointers_array[index + 1] = buffer;
+                was_replaced = true;
+            }
+            index++;
+        }
+        
+        number_of_cycles_passed++;
+    }
+    return 0;
+}
