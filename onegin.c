@@ -235,21 +235,21 @@ int CompareStrFromEnd(const void* first_element,
 int BubleSort_PointersArray(char** pointers_array, int number_of_strings) {
     bool was_replaced = true;
     int number_of_cycles_passed = 0;
-    int index = 0;
+    int index_of_pointer = 0;
     int different = 0;
     char* buffer = 0;
     while (was_replaced == true) {
         was_replaced = false;
-        index = 0;
-        while (index <= number_of_strings - 2 - number_of_cycles_passed) {
-            different = ((size_t) ((pointers_array[index]))) - ((size_t) ((pointers_array[index + 1])));
-            buffer = pointers_array[index];
+        index_of_pointer = 0;
+        while (index_of_pointer <= number_of_strings - 2 - number_of_cycles_passed) {
+            different = ((size_t) ((pointers_array[index_of_pointer]))) - ((size_t) ((pointers_array[index_of_pointer + 1])));
+            buffer = pointers_array[index_of_pointer];
             if (different > 0) {
-                pointers_array[index] = pointers_array[index + 1];
-                pointers_array[index + 1] = buffer;
+                pointers_array[index_of_pointer] = pointers_array[index_of_pointer + 1];
+                pointers_array[index_of_pointer + 1] = buffer;
                 was_replaced = true;
             }
-            index++;
+            index_of_pointer++;
         }
         
         number_of_cycles_passed++;
