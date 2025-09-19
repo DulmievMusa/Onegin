@@ -7,9 +7,7 @@
 #include <stdarg.h>
 #include <malloc.h>
 #include <ctype.h>
-#include <stdio.h>
 #include <sys/stat.h>
-#include <errno.h>
 
 
 const char* DIRECTION = "result.txt";
@@ -30,6 +28,7 @@ int GetStringLength(char* string);
 int BubleSort_PointersArray(char** pointers_array, int number_of_strings);
 long GetFileSize(const char* source);
 char* GetText(const char* source, int file_size);
+void AllPut_ToFile(char** pointers_array, int number_of_strings);
 
 int main()
 {
@@ -39,7 +38,11 @@ int main()
     int number_of_strings = GetNumberOfStrings(text);
     char** pointers_array = (char**) calloc(number_of_strings, sizeof(char*));
     CreateArrayOfPointers(text, pointers_array);
+    AllPut_ToFile(pointers_array, number_of_strings);
+    return 0;
+}
 
+void AllPut_ToFile(char** pointers_array, int number_of_strings) {
     BubleSort(pointers_array, number_of_strings);
     PutToFile_PointersArray(pointers_array, number_of_strings);
 
@@ -207,16 +210,16 @@ int CompareStrFromEnd(const void* first_element,
 
 
         int index = 0, different = 0;
-        char* first_string = ReturnLink_ToLastLetter(first_element_of_first_string);
-        char* second_string = ReturnLink_ToLastLetter(first_element_of_second_string);
-        while ((((size_t) (first_element_of_first_string)) - ((size_t) (first_string - index)) != 0) && (((size_t) (first_element_of_second_string)) - ((size_t) (second_string - index)) != 0)) {
-            different = toupper(*(first_string - index)) - toupper(*(second_string - index));
+        char* last_element_of_first_string = ReturnLink_ToLastLetter(first_element_of_first_string);
+        char* last_element_of_second_string = ReturnLink_ToLastLetter(first_element_of_second_string);
+        while ((((size_t) (first_element_of_first_string)) - ((size_t) (last_element_of_first_string - index)) != 0) && (((size_t) (first_element_of_second_string)) - ((size_t) (last_element_of_second_string - index)) != 0)) {
+            different = toupper(*(last_element_of_first_string - index)) - toupper(*(last_element_of_second_string - index));
             if (different != 0) {
                 return different;
             }
             index++;
         }
-        return toupper(*(first_string - index)) - toupper(*(second_string - index));
+        return toupper(*(last_element_of_first_string - index)) - toupper(*(last_element_of_second_string - index));
 
     }
 
