@@ -7,9 +7,13 @@
 #include <stdarg.h>
 #include <malloc.h>
 #include <ctype.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <errno.h>
 
-#define DIRECTION "result.txt"
-#define SOURCE "onegin.txt"
+
+const char* DIRECTION = "result.txt";
+const char* SOURCE = "onegin.txt";
 
 
 int GetNumberOfStrings(const char* array);
@@ -24,28 +28,16 @@ int Strcmp(char* first_string, char* second_string);
 char* ReturnLink_ToLastLetter(char* string);
 int GetStringLength(char* string);
 int BubleSort_PointersArray(char** pointers_array, int number_of_strings);
+long GetFileSize(const char* source);
+char* GetText(const char* source, int file_size);
 
 int main()
 {
     ClearResultFile(DIRECTION);
-    FILE* ptrFile = fopen(SOURCE, "rb" );
-
-    fseek(ptrFile , 0 , SEEK_END);                     
-    long lSize = ftell(ptrFile);                           
-    rewind (ptrFile);                                       
-
-
-    char* text = (char*) malloc(sizeof(char) * (lSize + 1));
-    fread(text, 1, lSize, ptrFile);
-    fclose (ptrFile);
-    
-
+    long file_size = GetFileSize(SOURCE);
+    char* text = GetText(SOURCE, file_size);
     int number_of_strings = GetNumberOfStrings(text);
-
     char** pointers_array = (char**) calloc(number_of_strings, sizeof(char*));
-
-
-    text[lSize] = '\0';
     CreateArrayOfPointers(text, pointers_array);
 
     BubleSort(pointers_array, number_of_strings);
@@ -56,6 +48,22 @@ int main()
 
     BubleSort_PointersArray(pointers_array, number_of_strings);
     PutToFile_PointersArray(pointers_array, number_of_strings);
+}
+
+char* GetText(const char* source, int file_size) {
+    FILE* source_file = fopen(source, "rb" );
+    char* text = (char*) malloc(sizeof(char) * (file_size + 1));
+    fread(text, 1, file_size, source_file);
+    fclose (source_file);
+    text[file_size] = '\0';
+    return text;
+}
+
+long GetFileSize(const char* source) {
+    const char *filename = source;
+    struct stat file_info;
+    stat(filename, &file_info);
+    return file_info.st_size;
 }
 
 void ClearResultFile(const char* direction) {
