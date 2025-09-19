@@ -10,13 +10,13 @@
 #include <sys/stat.h>
 
 
-const char* DIRECTION = "result.txt";
 const char* SOURCE = "onegin.txt";
+const char* DIRECTION = "result.txt";
 
 
 int GetNumberOfStrings(const char* array);
 int CreateArrayOfPointers(char* text, char ** pointers_array);
-void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings);
+void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings, bool skip_spaces);
 int BubleSort(char** pointers_array, int number_of_strings);
 char* ReturnLink_ToFirstLetter(char* string);
 int CompareStrFromEnd(const void* first_string,
@@ -28,7 +28,7 @@ int GetStringLength(char* string);
 int BubleSort_PointersArray(char** pointers_array, int number_of_strings);
 long GetFileSize(const char* source);
 char* GetText(const char* source, int file_size);
-void AllPut_ToFile(char** pointers_array, int number_of_strings);
+void AllPut_ToFile(char** pointers_array, int number_of_strings, bool skip_spaces);
 
 int main()
 {
@@ -38,19 +38,19 @@ int main()
     int number_of_strings = GetNumberOfStrings(text);
     char** pointers_array = (char**) calloc(number_of_strings, sizeof(char*));
     CreateArrayOfPointers(text, pointers_array);
-    AllPut_ToFile(pointers_array, number_of_strings);
+    AllPut_ToFile(pointers_array, number_of_strings, true);
     return 0;
 }
 
-void AllPut_ToFile(char** pointers_array, int number_of_strings) {
+void AllPut_ToFile(char** pointers_array, int number_of_strings, bool skip_spaces) {
     BubleSort(pointers_array, number_of_strings);
-    PutToFile_PointersArray(pointers_array, number_of_strings);
+    PutToFile_PointersArray(pointers_array, number_of_strings, skip_spaces);
 
     qsort(pointers_array, number_of_strings, sizeof(char*), &CompareStrFromEnd);
-    PutToFile_PointersArray(pointers_array, number_of_strings);
+    PutToFile_PointersArray(pointers_array, number_of_strings, skip_spaces);
 
     BubleSort_PointersArray(pointers_array, number_of_strings);
-    PutToFile_PointersArray(pointers_array, number_of_strings);
+    PutToFile_PointersArray(pointers_array, number_of_strings, false);
 }
 
 char* GetText(const char* source, int file_size) {
@@ -160,7 +160,7 @@ int GetNumberOfStrings(const char* array) {
     }
 }
 
-void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings) {
+void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings, bool skip_spaces) {
     FILE *file;
     file = fopen("result.txt", "a");
     int index_in_string = 0;
@@ -169,13 +169,21 @@ void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings) {
     while (index_in_pointers <= (numbers_of_strings - 1)) {
         index_in_string = 0;
         symbol = *(pointers_array[index_in_pointers]);
+        if ((int) symbol == 13 && skip_spaces) {
+            index_in_pointers++;
+            continue;
+            }
         while (symbol != '\n' && symbol != '\0') {
             fputc(symbol, file);
             index_in_string++;
             symbol = *(pointers_array[index_in_pointers] + index_in_string);
         }
         index_in_pointers++;
-}
+    }   
+    for (int index = 0; index < 100 && skip_spaces; index++) {
+        fputc('\n', file);
+    }
+    fputc('\n', file);
     fclose(file);
 }
 
