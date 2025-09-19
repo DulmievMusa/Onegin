@@ -17,10 +17,12 @@ int CreateArrayOfPointers(char* text, char ** pointers_array);
 void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings);
 int BubleSort(char** pointers_array, int number_of_strings);
 char* ReturnLink_ToFirstLetter(char* string);
-int CompareStrReverse(const void* first_string,
+int CompareStrFromEnd(const void* first_string,
                 const void* second_string);
 void ClearResultFile(const char* direction);
 int Strcmp(char* first_string, char* second_string);
+char* ReturnLink_ToLastLetter(char* string);
+int GetStringLength(char* string);
 
 int main()
 {
@@ -45,11 +47,14 @@ int main()
 
     printf("Number of strings: %d\n", GetNumberOfStrings(text));
     printf("Number of symbols: %ld\n", lSize);
-    pointers_array[3] = pointers_array[0];
-    //BubleSort(pointers_array, number_of_strings);
-    qsort(pointers_array, number_of_strings, sizeof(char*), &CompareStrReverse);
+
+    BubleSort(pointers_array, number_of_strings);
     PutToFile_PointersArray(pointers_array, number_of_strings);
+
+    qsort(pointers_array, number_of_strings, sizeof(char*), &CompareStrFromEnd);
     PutToFile_PointersArray(pointers_array, number_of_strings);
+
+
     fclose(ptrFile);
 }
 
@@ -58,6 +63,7 @@ void ClearResultFile(const char* direction) {
     file = fopen(direction, "w");
     fclose(file);
 }
+
 
 char* ReturnLink_ToFirstLetter(char* string) {
     int index = 0;
@@ -162,24 +168,46 @@ void PutToFile_PointersArray(char** pointers_array, int numbers_of_strings) {
     fclose(file);
 }
 
+int GetStringLength(char* string) {
+    int index = 0;
+    while (string[index] != '\0' && string[index] != '\n') {
+        index++;
+    }
+    return index;
+}
 
-int CompareStrReverse(const void* par1,
-                const void* par2) 
+char* ReturnLink_ToLastLetter(char* string) {
+    int index = 0;
+    int length = GetStringLength(string);
+    char symbol = string[length - 1 - index];
+    while (!isalpha(symbol) && (length - 1 - index) != 0) {
+        index++;
+        symbol = string[length - 1 - index];
+    }
+    if (isalpha(symbol)) {
+        return string + length - 1 - index;
+    }
+    return string + length - 1;
+}
+
+
+int CompareStrFromEnd(const void* first_element,
+                const void* second_element) 
     {
-        char* first_string = * (char**) par1;
-        char* second_string = * (char**) par2;
+        char* first_element_of_first_string = * (char**) first_element;
+        char* first_element_of_second_string = * (char**) second_element;
 
 
         int index = 0, different = 0;
-        /* first_string = ReturnLink_ToFirstLetter(first_string);
-        second_string = ReturnLink_ToFirstLetter(second_string); */
-        while (first_string[index] != '\n' && second_string[index] != '\n') {
-            different = toupper(first_string[index]) - toupper(second_string[index]);
+        char* first_string = ReturnLink_ToLastLetter(first_element_of_first_string);
+        char* second_string = ReturnLink_ToLastLetter(first_element_of_second_string);
+        while ((((size_t) (first_element_of_first_string)) - ((size_t) (first_string - index)) != 0) && (((size_t) (first_element_of_second_string)) - ((size_t) (second_string - index)) != 0)) {
+            different = toupper(*(first_string - index)) - toupper(*(second_string - index));
             if (different != 0) {
                 return different;
             }
             index++;
         }
-        return toupper(first_string[index]) - toupper(second_string[index]);
+        return toupper(*(first_string - index)) - toupper(*(second_string - index));
 
     }
