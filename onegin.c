@@ -28,6 +28,7 @@ int main(int number_of_arguments, char* values_of_arguments[]) {
         if (!strcmp(values_of_arguments[1], "skip")) {
             to_skip_spaces = true;
         }
+        // TODO: other arguments?
     }
     ClearResultFile(DIRECTION);
     long file_size = GetFileSize(SOURCE);
@@ -43,7 +44,7 @@ int main(int number_of_arguments, char* values_of_arguments[]) {
 void AllPut_ToFile(char** pointers_array, int number_of_strings, bool skip_spaces) {
     assert(pointers_array != NULL);
 
-    FILE *file;
+    FILE *file; // TODO: initialize directly here?
     file = fopen(DIRECTION, "a");
 
     BubleSort(pointers_array, number_of_strings);
@@ -61,13 +62,13 @@ void AllPut_ToFile(char** pointers_array, int number_of_strings, bool skip_space
 void ClearResultFile(const char* direction) {
     assert(direction != NULL);
 
-    FILE *file;
-    file = fopen(direction, "w");
+    FILE *file = fopen(direction, "w");; // TODO: initialize directly here
     fclose(file);
+    // TODO: why?
 }
 
 
-int CreateArrayOfPointers(char* text, char ** pointers_array) { // rename
+int CreateArrayOfPointers(char* text, char ** pointers_array) { // rename // TODO: name pointers_array -> lines
     assert(text != NULL);
     assert(pointers_array != NULL);
 
@@ -90,13 +91,13 @@ void PutStringArrayToFile(char** pointers_array, int numbers_of_strings, bool sk
     int index_in_string = 0;
     int index_in_pointers = 0;
     char symbol = *(pointers_array[0]);
-    while (index_in_pointers <= (numbers_of_strings - 1)) {
+    while (index_in_pointers <= (numbers_of_strings - 1)) { // TODO: usual way is (i < n)
         index_in_string = 0;
         symbol = *(pointers_array[index_in_pointers]);
-        if (symbol == '\r' && skip_spaces) {
+        if (symbol == '\r' && skip_spaces) { // TODO: rb
             index_in_pointers++;
             continue;
-            }
+            } // TODO: alignment
         while (symbol != '\n' && symbol != '\0') {
             fputc(symbol, file);
             index_in_string++;
@@ -104,7 +105,7 @@ void PutStringArrayToFile(char** pointers_array, int numbers_of_strings, bool sk
         }
         index_in_pointers++;
     }   
-    for (int index = 0; index < 100 && skip_spaces; index++) {
+    for (int index = 0; index < 100 && skip_spaces; index++) { // TODO: delete this
         fputc('\n', file);
     }
     fputc('\n', file);

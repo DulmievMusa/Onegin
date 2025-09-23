@@ -8,12 +8,12 @@
 
 #include "get_functions.h"
 
-char* ReturnLink_ToFirstLetter(char* string) {
+char* ReturnLink_ToFirstLetter(char* string) { // TODO: weird naming?
     assert(string != NULL);
 
     int index = 0;
     char symbol = string[index];
-    while (!isalpha(symbol) && symbol != '\n' && symbol != '\0') {
+    while (!isalpha(symbol) && symbol != '\n' && symbol != '\0') { // TODO: why stop at '\n', this behaviour isn't obvious
         index++;
         symbol = string[index];
     }
@@ -24,7 +24,7 @@ char* ReturnLink_ToFirstLetter(char* string) {
 
 }
 
-char* ReturnLink_ToLastLetter(char* string) {
+char* ReturnLink_ToLastLetter(char* string) { // TODO: you can take in direction flag which shows direction (i.e. direction = -1, +1)
     assert(string != NULL);
 
     int index = 0;
@@ -40,7 +40,7 @@ char* ReturnLink_ToLastLetter(char* string) {
     return string + length - 1;
 }
 
-int GetStringLength(char* string) {
+int GetStringLength(char* string) { // TODO: get _line_ length
     assert(string != NULL);
 
     int index = 0;
@@ -55,7 +55,7 @@ int GetNumberOfStrings(const char* array) {
 
     int number_of_strings = 1;
     const char* link = array;
-    while (true) {
+    while (true) { // NOTE: improve control-flow
         link = strchr(link, '\n');
         if (link == NULL) {  
             return number_of_strings;
@@ -74,11 +74,11 @@ long GetFileSize(const char* source) {
     return file_info.st_size;
 }
 
-char* GetText(const char* source, int file_size) {\
+char* GetText(const char* source, int file_size) {
     assert(source != NULL);
 
-    FILE* source_file = fopen(source, "rb" ); // file == NULL
-    char* text = (char*) malloc(sizeof(char) * (file_size + 1)); // text == NULL?
+    FILE* source_file = fopen(source, "rb" ); // file == NULL // TODO: why rb? explain // TODO: also, yeah, check for errors everywhere
+    char* text = (char*) malloc(sizeof(char) * (file_size + 1)); // TODO: text == NULL? + calloc
     //errno
     //perror strerror
     fread(text, 1, file_size, source_file); 
